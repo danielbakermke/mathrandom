@@ -1,0 +1,215 @@
+<html>
+<head>
+	<title>Quarantine Halloween Simulator</title>
+	<style>
+		body#page.normal {
+			background-color: #ffffff;
+			background-image: none;
+			color: #000;
+		}
+		body#page.spooky {
+			background-color: #000000;
+			background-image: url("haunted-house.png");
+			background-size: contain;
+			background-position: top right;
+			background-repeat: no-repeat;
+			color: #fff;
+		}
+		body#page.beast {
+			background-image: url("beast.png");
+			background-color: #000000;
+			background-size: contain;
+			background-position: top right;
+			background-repeat: no-repeat;
+			color: #fff;
+		}
+		#encounter {
+			background-color: rgba(0,0,0,.65);
+			width: 500px;
+		}
+		#encounter.fade {
+		  animation: fade .5s;
+		}
+			@keyframes fade {
+			  0% {
+			    opacity: 0;
+			  }
+			  100% {
+			    opacity: 1;
+			  }
+			}
+		button {
+			padding: 10px;
+			font-size: 120%;
+			cursor: pointer;
+		}
+		section {
+			margin: 0;
+			padding: 100px;
+		}
+		label,
+		button,
+		select {
+			display: block;
+			margin: 15px;
+		}
+	</style>
+</head>
+<body id="page" class="">
+<section id="setup">
+<form>
+	<h1>Virtual Trick or Treat Configurator</h1>
+	<p>It's quarantine and Trick or Treating is canceled. So here's a virtual trip down your street to get some delicious candy.</p>
+	<h3>Step 1: Enter names</h3>
+	<label>Your name <input type="text" id="yourname" name="yourname" value="" /></label>
+	<label>Who are you Trick or Treating with? <input type="text" id="friendname" name="friendname" value="" /></label>
+	<h3>Step 2: What are your four favorite candies?</h3>
+	<label>1. <input type="text" id="candy1" name="candy1" value="" /></label>
+	<label>2. <input type="text" id="candy2" name="candy2" value="" /></label>
+	<label>3. <input type="text" id="candy3" name="candy3" value="" /></label>
+	<label>4. <input type="text" id="candy4" name="candy4" value="" /></label>
+	<h3>Step 3: What's one animal, monster or creature you're afraid of?</h3>
+	<h5>(example: Spider, Ghost, Zombie)</h5>
+	<label><input type="text" id="monster" name="monster" value="" /></label>
+	<h3>Step 4: Choose one skill:</h3>
+	<select id="skill" name="skill">
+		<option value="Bread Baking">Bread Baking</option>
+		<option value="Swimming">Swimming</option>
+		<option value="Acrobatics">Acrobatics</option>
+		<option value="Crafting">Crafting</option>
+		<option value="Parkour">Parkour</option>
+		<option value="Strategizing">Strategizing</option>
+		<option value="Friendship">Friendship</option>
+		<option value="Stealth">Stealth</option>
+		<option value="Public Speaking">Public Speaking</option>
+		<option value="Combat">Combat</option>
+		<option value="Magic">Magic</option>
+	</select>
+	<button type="button" onclick="setHalloween()">Go Trick or Treating!</button>
+</form>
+</section>
+<section id="house" style="display: none;">
+		<section id="encounter" class="fade">
+		</section>
+		<button type="button" id="btnNext" onclick="loadHouse()">Next House</button>
+		<button type="button" onclick="reset()">Start Over</button>
+</section>
+<script>
+function setHalloween() {
+	//Set all your variables
+	var count = 0;
+	var you = document.getElementById("yourname").value;
+	var friend = document.getElementById("friendname").value;
+	var candy1 = document.getElementById("candy1").value;
+	var candy2 = document.getElementById("candy2").value;
+	var candy3 = document.getElementById("candy3").value;
+	var candy4 = document.getElementById("candy4").value;
+	var monster = document.getElementById("monster").value;
+	var skill = document.getElementById("skill").value;
+	var houses = Math.round(Math.random() * 4);
+	var hitpoints = Math.round(Math.random() * 9999);
+
+	var arrCandy = [candy1,candy2,candy3,candy4]
+	var arrWeirdCandy = ["a rock","a human tooth","a handful of cat hair","moldy orange peels","a stick of used deodorant","a few crusty pennies, stuck together","a mysterious code written on a greasy Big Mac wrapper","'Kanye for President' stickers","onion chapstick","a bracelet your cousin lost 5 years ago","a tiny bottle of ranch dressing","hot dog flavored dental floss","some rusty batteries","a baggie of hot kool-aid"];
+
+	localStorage.setItem("Candy", JSON.stringify(arrCandy));
+	localStorage.setItem("WeirdCandy", JSON.stringify(arrWeirdCandy));
+	localStorage.setItem("YourName", you);
+	localStorage.setItem("FriendsName", friend);
+	localStorage.setItem("MonsterType", monster);
+	localStorage.setItem("SkillType", skill);
+	localStorage.setItem("HouseCount", houses);
+	localStorage.setItem("HP", hitpoints);
+	localStorage.setItem("Counter", count);
+
+	document.getElementById("setup").style.display = "none";
+	document.getElementById("page").setAttribute("class", "");
+	document.getElementById("page").setAttribute("class", "spooky");
+
+	loadHouse();
+}
+
+function loadHouse() {
+	document.getElementById("encounter").classList.remove("fade");
+	void document.getElementById("encounter").offsetWidth;
+	document.getElementById("encounter").classList.add("fade");
+	var count = Number(localStorage.getItem("Counter", count));
+	if (Number(localStorage.getItem("HouseCount")) >= count) {
+		document.getElementById("btnNext").style.display = "block";
+		document.getElementById("house").style.display = "block";
+		document.getElementById("encounter").innerHTML = buildEncounter(count);
+		count++;
+		localStorage.setItem("Counter", count);
+	} else {
+		document.getElementById("btnNext").style.display = "none";
+		document.getElementById("encounter").innerHTML = finalEncounter();
+	}
+}
+
+function buildEncounter(count) {
+	var candies = getCandy();
+	var houseAddress = "<h1>82"+count+" State Street</h1>";
+	var houseInteraction = "<p>You knock on the door and say TRICK OR TREAT.</p><p>"+getInteraction()+"</p>";
+
+	return (houseAddress+houseInteraction+candies);
+}
+
+function finalEncounter() {
+	document.getElementById("page").setAttribute("class", "beast");
+	var loadWeirdCandy = localStorage.getItem("WeirdCandy");
+	var getWeirdCandy = JSON.parse(loadWeirdCandy);
+	var title = "<h1>Oh no! The last house on the block is haunted!</h1>";
+	var boss = "<h4>A wild "+localStorage.getItem("MonsterType")+" appears with <strong>"+localStorage.getItem("HP")+"HP</strong>!</h4>";
+	var friendskill = "<p>"+localStorage.getItem("FriendsName")+" runs screaming into the night, leaving a trick or treat bag full of "+getWeirdCandy[Math.floor(Math.random()*getWeirdCandy.length)]+" behind.</p><p>You are alone to face your greatest fear.</p>";
+	var yourskill = "<p>You're just a kid, but you've got one surprise up your sleeve: You possess incredibly powerful "+localStorage.getItem("SkillType")+" skills!</p><p>Roll the dice to start your attack!</p>";
+	var d10 = "<label id='dicebag'><input type='text' id='dice' name='dice' size='5' style='display:inline;' /> <button id='roller' onclick='rollDice()' type='button' style='display:inline;'>Roll!</button></label>";
+	var fightstats = "<h1 id='fightstats'>The "+localStorage.getItem("MonsterType")+" has "+localStorage.getItem("HP")+"HP!</h1>";
+
+	return (title+boss+friendskill+yourskill+d10+fightstats);
+}
+
+function getCandy() {
+	var loadCandy = localStorage.getItem("Candy");
+	var getCandy = JSON.parse(loadCandy);
+	var loadWeirdCandy = localStorage.getItem("WeirdCandy");
+	var getWeirdCandy = JSON.parse(loadWeirdCandy);
+	var candyCount = Math.ceil(Math.random() * 6);
+	var list = "<p>You sort through your bag and are excited to discover</p><ul>";
+	for (var c = 0; c < candyCount; c++) {
+		list += "<li>"+getCandy[Math.floor(Math.random()*getCandy.length)]+"</li>";
+	}
+	list += "</ul>";
+	list += "<p>In "+localStorage.getItem("FriendsName")+"'s bag there's... <strong>"+getWeirdCandy[Math.floor(Math.random()*getWeirdCandy.length)]+"</strong>.</p>";
+
+	return(list);
+}
+
+function getInteraction () {
+	var arrInteraction = ["Something flies out of the upstairs window into your bags.","The door swings slowly open, a skeleton hand drops something into your bags.","Something falls from the dark shadows above the door into your bags.","The door begins to glow. You hear a rustling sound in your bags.","An old cat jumps through a hole in the screen door and drops something into your bags.","You hear a loud crash from somewhere followed by a scream. Your bags suddenly feel heavier."];
+
+	return(arrInteraction[Math.floor(Math.random()*arrInteraction.length)]);
+}
+
+function rollDice() {
+	var thisroll = Math.round(Math.random() * 2599);
+	document.getElementById("dice").value = thisroll;
+	localStorage.setItem("HP", Number(localStorage.getItem("HP"))-Number(thisroll)); 
+	document.getElementById("fightstats").innerHTML = "Unleashing the awesome power of "+localStorage.getItem("SkillType")+", you knock the "+localStorage.getItem("MonsterType")+" down to "+localStorage.getItem("HP")+"HP! Keep rolling!";
+	if (Number(localStorage.getItem("HP")) <= 0) {
+		document.getElementById("dicebag").style.display = "none";
+		document.getElementById("fightstats").innerHTML = "<span style='color:red;'>With a tremendous finishing move, using every bit of advanced training in "+localStorage.getItem("SkillType")+" you defeat the "+localStorage.getItem("MonsterType")+"!</span>";
+	}
+}
+
+function reset() {
+	localStorage.clear();
+	document.getElementById("house").style.display = "none";
+	document.getElementById("setup").style.display = "block";
+	document.getElementById("page").setAttribute("class", "");
+	document.getElementById("page").setAttribute("class", "normal");
+}
+
+
+</script>
+</body>
+</html>
