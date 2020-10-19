@@ -22,23 +22,12 @@
 <section>
   <form>
     <h1>Roll Dice</h1>
-    <label id='dicebag'>
-      <input type='text' id='dice' name='dice' size='5' style='display:inline;' /> <button id='roller' onclick='rollDice()' type='button' style='display:inline;'>Roll!</button>
-    </label>
+	<table>
+		<tr><th>Random</th><th>Unrounded Result</th><th>Math.Floor (Rounded down)</th><th>Math.Ceil (Rounded up)</th></tr>
+		<tr><td id="mathrandom"></td><td id="mathresult"></td><td id="mathfloor"></td><td id="mathceil"></td></tr>
+	</table>
+	<button id='roller' onclick='rollDice()' type='button'>Roll!</button>
   </form>
 </section>
-<script>
-function rollDice() {
-	var thisroll = Math.round(Math.random() * 2599);
-	document.getElementById("dice").value = thisroll;
-	localStorage.setItem("HP", Number(localStorage.getItem("HP"))-Number(thisroll)); 
-	document.getElementById("fightstats").innerHTML = "Unleashing the awesome power of "+localStorage.getItem("SkillType")+", you knock the "+localStorage.getItem("MonsterType")+" down to "+localStorage.getItem("HP")+"HP! Keep rolling!";
-	if (Number(localStorage.getItem("HP")) <= 0) {
-		document.getElementById("dicebag").style.display = "none";
-		document.getElementById("fightstats").innerHTML = "<span style='color:red;'>With a tremendous finishing move, using every bit of advanced training in "+localStorage.getItem("SkillType")+" you defeat the "+localStorage.getItem("MonsterType")+"!</span>";
-	}
-}
-
-</script>
 </body>
 </html>
