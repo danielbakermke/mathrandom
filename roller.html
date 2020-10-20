@@ -27,11 +27,12 @@
 <section>
   <form>
     <h1>Roll Dice</h1>
+	<p>Problem: How do we re-create a random dice roll of a 20-sided dice?</p>
 	<table>
-		<tr><th>Random</th><th>Roll a d20</th><th>Unrounded Result</th><th>Math.Floor (Rounded down)</th><th>Math.Ceil (Rounded up)</th></tr>
+		<tr><th>Math.random (Random Number Between 0 and 1)</th><th></th><th>Unrounded Result</th><th>Math.floor (Rounded down)</th><th>Math.ceil (Rounded up)</th></tr>
 		<tr><td id="mathrandom">00</td><td>x 20</td><td id="mathresult">00</td><td id="mathfloor">00</td><td id="mathceil">00</td></tr>
 	</table>
-	<button id='roller' onclick='rollDice()' type='button'>Roll!</button>
+	<button id='roller' onclick='rollDice()' type='button'>Roll a d20!</button>
   </form>
 </section>
 
