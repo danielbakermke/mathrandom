@@ -16,6 +16,11 @@
 			display: block;
 			margin: 15px;
 		}
+		td,
+		th {
+			text-align: center;
+			padding: 25px;
+		}
 	</style>
 </head>
 <body>
@@ -23,11 +28,29 @@
   <form>
     <h1>Roll Dice</h1>
 	<table>
-		<tr><th>Random</th><th>Unrounded Result</th><th>Math.Floor (Rounded down)</th><th>Math.Ceil (Rounded up)</th></tr>
-		<tr><td id="mathrandom">00</td><td id="mathresult">00</td><td id="mathfloor">00</td><td id="mathceil">00</td></tr>
+		<tr><th>Random</th><th>Roll a d20</th><th>Unrounded Result</th><th>Math.Floor (Rounded down)</th><th>Math.Ceil (Rounded up)</th></tr>
+		<tr><td id="mathrandom">00</td><td>x 20</td><td id="mathresult">00</td><td id="mathfloor">00</td><td id="mathceil">00</td></tr>
 	</table>
 	<button id='roller' onclick='rollDice()' type='button'>Roll!</button>
   </form>
 </section>
+
+<script>
+	function rollDice() {
+		//alert("CHEESE");
+		var random = Math.random();
+		document.getElementById("mathrandom").innerHTML = random;
+
+		var result = random*20;
+		document.getElementById("mathresult").innerHTML = result;
+
+		var down = Math.floor(result);
+		document.getElementById("mathfloor").innerHTML = down;
+
+		var up = Math.ceil(result);
+		document.getElementById("mathceil").innerHTML = up;
+	}
+</script>
+
 </body>
 </html>
